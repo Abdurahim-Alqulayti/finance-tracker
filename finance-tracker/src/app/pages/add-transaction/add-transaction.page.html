@@ -1,0 +1,100 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Transaction</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="form-container">
+    <!-- Transaction Type Selector -->
+    <ion-segment [(ngModel)]="transactionType" (ionChange)="onTypeChange()">
+      <ion-segment-button value="expense">
+        <ion-label>Expense</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="income">
+        <ion-label>Income</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- Amount Input -->
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Amount</ion-label>
+          <ion-input
+            type="number"
+            [(ngModel)]="amount"
+            placeholder="0.00"
+            class="amount-input">
+          </ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Category Selection -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Select Category</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="category-grid">
+          <div
+            *ngFor="let cat of categories"
+            class="category-item"
+            [class.selected]="category === cat.name"
+            (click)="category = cat.name">
+            <ion-icon [name]="cat.icon"></ion-icon>
+            <span>{{ cat.name }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Description -->
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Description (Optional)</ion-label>
+          <ion-textarea
+            [(ngModel)]="description"
+            placeholder="Enter details..."
+            rows="3" >
+          </ion-textarea>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Date -->
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label position="stacked">Date</ion-label>
+          <ion-datetime-button datetime="transaction-date"></ion-datetime-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime
+          id="transaction-date"
+          [(ngModel)]="date"
+          presentation="date">
+        </ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <!-- Action Buttons -->
+    <div class="button-container">
+      <ion-button expand="block" (click)="saveTransaction()" [disabled]="!amount || !category">
+        Save Transaction
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="cancel()">
+        Cancel
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

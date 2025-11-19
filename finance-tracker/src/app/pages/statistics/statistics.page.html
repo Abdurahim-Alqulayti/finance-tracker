@@ -1,0 +1,127 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Statistics</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="stats-container">
+
+    <!-- Summary Cards -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Financial Summary</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <ion-icon name="trending-up" color="success"></ion-icon>
+            <div class="summary-details">
+              <p>Total Income</p>
+              <h3 class="income">${{ totalIncome | number:'1.2-2' }}</h3>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <ion-icon name="trending-down" color="danger"></ion-icon>
+            <div class="summary-details">
+              <p>Total Expenses</p>
+              <h3 class="expense">${{ totalExpenses | number:'1.2-2' }}</h3>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <ion-icon name="wallet" [color]="balance >= 0 ? 'primary' : 'warning'"></ion-icon>
+            <div class="summary-details">
+              <p>Net Balance</p>
+              <h3 [class.positive]="balance >= 0" [class.negative]="balance < 0">
+                ${{ balance | number:'1.2-2' }}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Category Breakdown -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Category Breakdown</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-segment [(ngModel)]="selectedView" (ionChange)="onViewChange()">
+        <ion-segment-button value="expenses">
+          <ion-label>Expenses</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="income">
+          <ion-label>Income</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-card-content>
+        <div *ngIf="currentCategoryData.length > 0; else noData">
+          <!-- Total -->
+          <div class="total-display">
+            <h2>Total {{ selectedView === 'expenses' ? 'Expenses' : 'Income' }}</h2>
+            <h1>${{ currentTotal | number:'1.2-2' }}</h1>
+          </div>
+
+          <!-- Category List with Progress Bars -->
+          <div class="category-list">
+            <div *ngFor="let category of currentCategoryData" class="category-item">
+              <div class="category-header">
+                <div class="category-info">
+                  <div class="color-indicator" [style.background-color]="category.color"></div>
+                  <span class="category-name">{{ category.name }}</span>
+                </div>
+                <div class="category-amount">
+                  <span class="amount">${{ category.total | number:'1.2-2' }}</span>
+                  <span class="percentage">{{ category.percentage | number:'1.0-0' }}%</span>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  [style.width.%]="category.percentage"
+                  [style.background-color]="category.color">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noData>
+          <div class="no-data">
+            <ion-icon name="pie-chart-outline"></ion-icon>
+            <p>No {{ selectedView }} data available</p>
+          </div>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Savings Rate (if there's income) -->
+    <ion-card *ngIf="totalIncome > 0">
+      <ion-card-header>
+        <ion-card-subtitle>Savings Rate</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="savings-rate">
+          <div class="rate-circle" [class.positive]="balance >= 0" [class.negative]="balance < 0">
+            <span class="rate-value">{{ ((balance / totalIncome) * 100) | number:'1.0-0' }}%</span>
+          </div>
+          <p class="rate-description">
+            {{ balance >= 0 ? 'You are saving ' : 'You are overspending by ' }}
+            <strong>{{ ((balance / totalIncome) * 100) | number:'1.0-0' }}%</strong>
+            of your income
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>
