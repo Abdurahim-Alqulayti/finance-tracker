@@ -1,16 +1,12 @@
+//  app/pages/transactions.page.ts
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonicModule, AlertController, IonIcon} from '@ionic/angular';
+import { IonicModule, AlertController, IonIcon } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FinanceService } from '../../services/finance';
 import { Transaction } from '../../models/transaction.model';
-imports: [
-  IonicModule,
-  CommonModule,
-  FormsModule,
-  IonIcon
-]
 
 @Component({
   selector: 'app-transactions',
@@ -83,6 +79,10 @@ export class TransactionsPage implements OnInit {
 
   navigateToAddTransaction() {
     this.router.navigate(['/add-transaction']);
+  }
+
+  navigateToTransactionDetails(transactionId: string) {
+    this.router.navigate(['/transaction-details', transactionId]);
   }
 
   formatDate(date: Date): string {

@@ -54,6 +54,7 @@
 //     this.router.navigate(['/statistics']);
 //   }
 // }
+// app/pages/dashboard.page.ts
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
